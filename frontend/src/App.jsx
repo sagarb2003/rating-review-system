@@ -1,7 +1,9 @@
+import { ShowProducts } from "./components/ShowProducts"
+
 function App() {
   return (
-    <div className="text-2xl font-bold underline">
-      FitPage
+    <div className="bg-gray-50">
+      <ShowProducts />
     </div>
   )
 }
