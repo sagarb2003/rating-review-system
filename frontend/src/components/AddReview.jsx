@@ -6,10 +6,14 @@ export const AddReview = ({ productId, onClose }) => {
     const [rating, setRating] = useState(0);
     const [error, setError] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!userId.trim()) {
             setError('User ID is required');
+            return;
+        }
+        if (rating === 0 && !review.trim()) {
+            setError('Please provide either a rating or a review');
             return;
         }
 
@@ -20,8 +24,27 @@ export const AddReview = ({ productId, onClose }) => {
             ...(review.trim() && { review })
         };
 
-        console.log('Review submitted:', reviewData);
-        onClose();
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/reviews`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reviewData),
+            });
+
+            if (response.ok) {
+                console.log('Review submitted:', reviewData);
+                onClose();
+            } else {
+                const errorData = await response.json();
+                setError(errorData.error);
+            }
+        } catch (error) {
+            console.error('Error submitting review:', error);
+            setError('An error occurred. Please try again.');
+        }
     };
 
     return (

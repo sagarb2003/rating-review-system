@@ -20,4 +20,5 @@ model Review {
   rating    Int?
   review    String?
   createdAt DateTime @default(now())
+  @@unique([user_id, product_id])
 }
